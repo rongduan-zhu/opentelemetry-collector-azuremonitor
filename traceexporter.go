@@ -16,7 +16,6 @@ package azuremonitorexporter
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"go.opentelemetry.io/collector/component"
@@ -63,7 +62,7 @@ func (v *traceVisitor) visit(
 
 func (exporter *traceExporter) onTraceData(context context.Context, traceData pdata.Traces) (droppedSpans int, err error) {
 	spanCount := traceData.SpanCount()
-	exporter.logger.Debug("Exporting spans", zap.Field{Key: "Count", String: fmt.Sprintf("%v", spanCount)})
+	exporter.logger.Debug("Exporting spans", zap.Int("Count", spanCount))
 	if spanCount == 0 {
 		return 0, nil
 	}
@@ -74,7 +73,7 @@ func (exporter *traceExporter) onTraceData(context context.Context, traceData pd
 }
 
 func (exporter *traceExporter) Shutdown(context.Context) error {
-	exporter.logger.Info("Shutting down trace exporter", zap.Field{Key: "Shutdown Timeout", String: exporter.shutdownTimeout.String()})
+	exporter.logger.Info("Shutting down trace exporter", zap.String("Shutdown Timeout", exporter.shutdownTimeout.String()))
 	<-exporter.transportChannel.Close(exporter.shutdownTimeout)
 	return nil
 }
