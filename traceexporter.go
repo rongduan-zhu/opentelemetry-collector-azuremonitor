@@ -69,7 +69,7 @@ func (exporter *traceExporter) onTraceData(context context.Context, traceData pd
 
 	visitor := &traceVisitor{exporter: exporter}
 	Accept(traceData, visitor)
-	exporter.logger.Debug("Exported spans", zap.Int("Count", spanCount-visitor.processed), zap.Error(visitor.err))
+	exporter.logger.Debug("Exported spans", zap.Int("Dropped", spanCount-visitor.processed), zap.Error(visitor.err))
 	return (spanCount - visitor.processed), visitor.err
 }
 
